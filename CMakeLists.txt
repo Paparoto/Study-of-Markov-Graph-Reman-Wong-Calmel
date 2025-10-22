@@ -3,4 +3,6 @@ project(untitled4 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(untitled4 main.c utils.c)
+add_executable(untitled4 main.c utils.c
+        graph.h
+        graph.c)
