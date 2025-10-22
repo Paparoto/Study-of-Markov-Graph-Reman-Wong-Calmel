@@ -23,5 +23,6 @@ void displayList(List list);
 AdjList createAdjList(int size);
 void displayAdjList(AdjList g);
 AdjList readGraph(const char *filename);
+int isMarkovGraph(AdjList g);
 
 #endif

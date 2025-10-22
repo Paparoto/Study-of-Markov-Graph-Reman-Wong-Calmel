@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "graph.h"
 
 Cell *createCell(int dest, float proba) {
@@ -78,4 +79,25 @@ AdjList readGraph(const char *filename) {
 
     fclose(file);
     return g;
+}
+
+int isMarkovGraph(AdjList g) {
+    int ok = 1;
+    for (int i = 0; i < g.size; i++) {
+        float sum = 0;
+        Cell *tmp = g.array[i].head;
+        while (tmp != NULL) {
+            sum += tmp->proba;
+            tmp = tmp->next;
+        }
+        if (sum < 0.99 || sum > 1.01) {
+            printf("The sum of probabilities of vertex %d is %.2f\n", i + 1, sum);
+            ok = 0;
+        }
+    }
+    if (ok)
+        printf("The graph is a Markov graph\n");
+    else
+        printf("The graph is not a Markov graph\n");
+    return ok;
 }
