@@ -24,5 +24,7 @@ AdjList createAdjList(int size);
 void displayAdjList(AdjList g);
 AdjList readGraph(const char *filename);
 int isMarkovGraph(AdjList g);
+char *getId(int num);
+void exportMermaid(AdjList g, const char *filename);
 
 #endif

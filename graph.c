@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "graph.h"
 
@@ -100,4 +101,46 @@ int isMarkovGraph(AdjList g) {
     else
         printf("The graph is not a Markov graph\n");
     return ok;
+}
+
+char *getId(int num) {
+    static char id[8];
+    int i = 0;
+    num--;
+    while (num >= 0) {
+        id[i++] = 'A' + (num % 26);
+        num = num / 26 - 1;
+    }
+    id[i] = '\0';
+    for (int j = 0, k = i - 1; j < k; j++, k--) {
+        char temp = id[j];
+        id[j] = id[k];
+        id[k] = temp;
+    }
+    return id;
+}
+
+void exportMermaid(AdjList g, const char *filename) {
+    FILE *f = fopen(filename, "wt");
+    if (!f) {
+        perror("Could not open output file");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(f, "---\nconfig:\n   layout: elk\n   theme: neo\n   look: neo\n---\n\n");
+    fprintf(f, "flowchart LR\n");
+
+    for (int i = 0; i < g.size; i++)
+        fprintf(f, "%s((%d))\n", getId(i + 1), i + 1);
+
+    for (int i = 0; i < g.size; i++) {
+        Cell *tmp = g.array[i].head;
+        while (tmp != NULL) {
+            fprintf(f, "%s -->|%.2f|%s\n", getId(i + 1), tmp->proba, getId(tmp->dest));
+            tmp = tmp->next;
+        }
+    }
+
+    fclose(f);
+    printf("Mermaid file exported: %s\n", filename);
 }
